@@ -1,0 +1,13 @@
+select
+    sum(price_rub) as revenue_rub,
+    "date"
+from
+    {{ ref("trips_prep") }}
+{% if is_incremental() %}
+where
+    "date" >= (select max("date") - interval '2' day from {{ this }})
+{% endif %}
+group by
+    2
+order by
+    2
